@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fun Signup App',
       theme: ThemeData(primarySwatch: Colors.purple),
+      debugShowCheckedModeBanner: false,
       home: const SignupPage(),
     );
   }
@@ -56,8 +57,10 @@ class _SignupPageState extends State<SignupPage> {
               // 👤 Name Field
               TextFormField(
                 controller: _nameController,
+                keyboardType: TextInputType.name,
                 decoration: const InputDecoration(
                   labelText: 'Full Name',
+                  hintText: 'Simmi Kumari', 
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
@@ -73,8 +76,10 @@ class _SignupPageState extends State<SignupPage> {
               // 📧 Email Field
               TextFormField(
                 controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: 'Email Address',
+                  hintText: 'skumari4@student.gsu.com',
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
@@ -97,6 +102,7 @@ class _SignupPageState extends State<SignupPage> {
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
                 decoration: const InputDecoration(
                   labelText: 'Password',
                   prefixIcon: Icon(Icons.lock),
@@ -118,10 +124,12 @@ class _SignupPageState extends State<SignupPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Welcome! Account created successfully.'),
-                        backgroundColor: Colors.green,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WelcomeScreen(
+                          name: _nameController.text,
+                        ),
                       ),
                     );
                   }
@@ -132,7 +140,9 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white, ),
                 ),
               ),
             ],
@@ -149,4 +159,26 @@ class _SignupPageState extends State<SignupPage> {
     _passwordController.dispose();
     super.dispose();
 }
+}
+
+class WelcomeScreen extends StatelessWidget {
+  final String name;
+
+  const WelcomeScreen({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Welcome'),
+        backgroundColor: Colors.purple,
+      ),
+      body: Center(
+        child: Text(
+          'Welcome, $name!',
+          style: const TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
 }
